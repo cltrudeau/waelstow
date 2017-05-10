@@ -21,6 +21,6 @@ Python wrench has been tested with Python 2.7, 3.5, and 3.6
 Docs & Source
 =============
 
-Docs: http://python-waelstow.readthedocs.io/en/latest/
+Docs: http://waelstow.readthedocs.io/en/latest/
 
 Source: https://github.com/cltrudeau/waelstow
