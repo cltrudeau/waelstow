@@ -1,10 +1,8 @@
 # These requirements are for running tests and the sample_site, the library 
 # itself only needs a subset, see setup.py for that list
 coverage==4.2
-portalocker==0.5.7
 pudb==2015.3
 pyflakes==1.2.3
-six==1.10
 Sphinx==1.4.5
 tox==2.3.1
 twine==1.7.4

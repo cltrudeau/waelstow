@@ -1,26 +1,23 @@
 import os, sys
 
-from wrench import __version__
 
-install_requires = [
-    'six>=1.10',
-    'portalocker>=0.5.7',
-]
+HOME_DIR = os.path.dirname(__file__)
+sys.path.append(os.path.join(HOME_DIR, 'waelstow.py'))
 
-if sys.version_info[:2] < (3,4):
-    install_requires.append('enum34>=1.0.4')
+from waelstow import __version__
 
-
-readme = os.path.join(os.path.dirname(__file__), 'README.rst')
+readme = os.path.join(HOME_DIR, 'README.rst')
 long_description = open(readme).read()
 
 
 SETUP_ARGS = dict(
-    name='wrench',
+    name='waelstow',
     version=__version__,
-    description=('Collection of random python tools and utilities '),
+    description=('A small collection of tools for unit testing.  Includes '
+        'methods for test suite discovery for use in your runner and contexts '
+        'for capturing STDIO or STDERR and temporarily moving directories.'),
     long_description=long_description,
-    url='https://github.com/cltrudeau/wrench',
+    url='https://github.com/cltrudeau/waelstow',
     author='Christopher Trudeau',
     author_email='ctrudeau+pypi@arsensa.com',
     license='MIT',
@@ -32,18 +29,17 @@ SETUP_ARGS = dict(
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
         'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
         'Topic :: Software Development :: Libraries :: Application Frameworks',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
-    keywords='tools',
+    keywords='test,testing,unit test,unittest,test runner',
     test_suite='load_tests.get_suite',
-    install_requires=install_requires,
+    py_modules = ['waelstow',],
+    install_requires=[],
 )
 
 if __name__ == '__main__':
-    from setuptools import setup, find_packages
-
-    SETUP_ARGS['packages'] = find_packages()
+    from setuptools import setup
     setup(**SETUP_ARGS)

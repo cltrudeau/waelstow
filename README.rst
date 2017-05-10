@@ -1,24 +1,26 @@
-wrench
-******
-
-Another tool for your python toolset.  General odds and ends that kept coming
-up in projects.
+Waelstow
+========
+    [wel stoʊ]  / *noun* 
+    
+    1) literal: "death field" or "slaugher field"; 
+    2) Anglo Saxon term for battlefields
+    3) A collection of python testing utilties
 
 Installation
 ============
 
 .. code-block:: bash
 
-    $ pip install wrench
+    $ pip install waelstow
 
 Supports
 ========
 
-Python wrench has been tested with Python 2.7, 3.4, and 3.5
+Python wrench has been tested with Python 2.7, 3.5, and 3.6
 
 Docs & Source
 =============
 
-Docs: http://python-wrench.readthedocs.io/en/latest/
+Docs: http://python-waelstow.readthedocs.io/en/latest/
 
-Source: https://github.com/cltrudeau/wrench
+Source: https://github.com/cltrudeau/waelstow

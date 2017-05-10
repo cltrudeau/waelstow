@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Wrench documentation build configuration file, created by
+# walestow documentation build configuration file, created by
 # sphinx-quickstart on Wed Sep  2 10:34:17 2015.
 #
 # This file is execfile()d with the current directory set to its
@@ -49,8 +49,9 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = 'Wrench'
-copyright = '2015, Christopher Trudeau'
+project = 'Waelstow'
+import datetime
+copyright = '2015-%d, Christopher Trudeau' % datetime.datetime.now().year 
 author = 'Christopher Trudeau'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -59,7 +60,7 @@ author = 'Christopher Trudeau'
 #
 # The short X.Y version.
 import imp
-mod = imp.load_source('wrench', '../wrench/__init__.py')
+mod = imp.load_source('walestow', '../waelstow.py')
 
 version = mod.__version__
 
@@ -209,7 +210,7 @@ html_theme = 'sphinx_rtd_theme'
 #html_search_scorer = 'scorer.js'
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'Wrenchdoc'
+htmlhelp_basename = 'Waelstow'
 
 # -- Options for LaTeX output ---------------------------------------------
 
@@ -231,7 +232,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-  (master_doc, 'wrench.tex', 'Wrench Documentation',
+  (master_doc, 'walestow.tex', 'Waelstow Documentation',
    'Christopher Trudeau', 'manual'),
 ]
 
@@ -261,7 +262,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'wrench', 'Wrench Documentation',
+    (master_doc, 'walestow', 'Waelstow Documentation',
      [author], 1)
 ]
 
@@ -275,8 +276,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  (master_doc, 'wrench', 'Wrench Documentation',
-   author, 'wrench', 'One line description of project.',
+  (master_doc, 'walestow', 'Waelstow Documentation',
+   author, 'walestow', 'One line description of project.',
    'Miscellaneous'),
 ]
 

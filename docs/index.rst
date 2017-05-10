@@ -2,17 +2,11 @@
 
 Version: |version|
 
-Contents
-========
+Methods
+=======
 
-.. toctree::
-   :maxdepth: 2
-
-   contexts
-   logtools
-   utils
-   waelstow
-
+.. automodule:: waelstow
+    :members:
 
 Indices and tables
 ==================

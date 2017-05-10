@@ -1,4 +1,4 @@
-from unittest import TestCase, TestSuite, defaultTestLoader
+from unittest import TestCase
 
 class ATestCase(TestCase):
     def test_common(self):
