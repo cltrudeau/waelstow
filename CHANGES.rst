@@ -1,3 +1,8 @@
+0.10.1
+======
+
+* update build process to create a universal wheel
+
 0.10
 ====
 

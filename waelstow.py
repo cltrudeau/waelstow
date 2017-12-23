@@ -1,5 +1,5 @@
 # waelstow.py
-__version__ = '0.10.0'
+__version__ = '0.10.1'
 
 import contextlib, os, shutil, sys, tempfile, json
 from unittest import TestCase, TestSuite, TestLoader
