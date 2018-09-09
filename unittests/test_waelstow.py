@@ -9,11 +9,10 @@ from waelstow import (list_tests, discover_tests, capture_stdout,
 class WaelstowTest(TestCase):
     @classmethod
     def setUpClass(cls):
-        extras = os.path.join(os.path.dirname(os.path.dirname(__file__)), 
+        cls.extras = os.path.join(os.path.dirname(os.path.dirname(__file__)), 
             'extras')
 
-        cls.good_dir = os.path.abspath(os.path.join(extras, 'good_tests'))
-        cls.bad_dir = os.path.abspath(os.path.join(extras, 'bad_tests'))
+        cls.good_dir = os.path.abspath(os.path.join(cls.extras, 'good_tests'))
 
         cls.good_cases = {
             'a1' :'test_method_a1 (tests_a.A1TestCase)',
@@ -25,10 +24,8 @@ class WaelstowTest(TestCase):
             'cc' :'test_method_common (tests_c.CTestCase)',
         }
 
-        cls.bad_cases = {
-            'dc':'test_method_common (tests_d.DTestCase)',
-            'f' :'test_method_f (unittest.loader._FailedTest)',
-        }
+    # -----------------------------------------------------------
+    # Test Case Discovery
 
     def assert_test_strings(self, case, keys, tests):
         values = [case[key] for key in keys]
@@ -77,6 +74,25 @@ class WaelstowTest(TestCase):
         self.assertEqual(1, len(tests))
         self.assertEqual('test_method_common (others.OtherTestCase)', 
             str(tests[0]))
+
+    def test_bad_file(self):
+        # check that discovered tests that don't compile are found properly
+        # (they used to be ignored)
+        bad_dir = os.path.abspath(os.path.join(self.extras, 'bad_tests'))
+        suite = discover_tests(bad_dir, [])
+
+        expected = ['test_method_common (tests_d.DTestCase)',]
+        if sys.version[0] == '3':
+            expected.append('tests_f (unittest.loader._FailedTest)')
+        else: # pragma: no cover
+            expected.append('tests_f (unittest.loader.ModuleImportFailure)')
+
+        expected = set(expected)
+        tests = set([str(test) for test in list_tests(suite)])
+        self.assertEqual(expected, tests)
+
+    # -----------------------------------------------------------
+    # Test Utilities
 
     def test_replace_dir(self):
         # create a temp directory and put something in it which is to be
