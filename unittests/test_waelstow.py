@@ -1,5 +1,5 @@
 import os, shutil, tempfile, sys
-from unittest import TestCase, TestSuite
+from unittest import TestCase
 
 from waelstow import (list_tests, discover_tests, capture_stdout, 
     capture_stderr, replaced_directory, pprint)
@@ -9,87 +9,74 @@ from waelstow import (list_tests, discover_tests, capture_stdout,
 class WaelstowTest(TestCase):
     @classmethod
     def setUpClass(cls):
-        current = os.path.dirname(__file__)
-        cls.start_dir = os.path.abspath(os.path.join(current, 'data'))
-        cls.pattern = 'fake_testcases.py'
+        extras = os.path.join(os.path.dirname(os.path.dirname(__file__)), 
+            'extras')
 
-        cls.all_cases = {
-            'ac':'test_common (fake_testcases.ATestCase)',
-            'aa':'test_a (fake_testcases.ATestCase)',
-            'bc':'test_common (fake_testcases.BTestCase)',
-            'bb':'test_b (fake_testcases.BTestCase)',
-            'cc':'test_common (fake_testcases.CTestCase)',
+        cls.good_dir = os.path.abspath(os.path.join(extras, 'good_tests'))
+        cls.bad_dir = os.path.abspath(os.path.join(extras, 'bad_tests'))
+
+        cls.good_cases = {
+            'a1' :'test_method_a1 (tests_a.A1TestCase)',
+            'a1c':'test_method_common (tests_a.A1TestCase)',
+            'a2' :'test_method_a2 (tests_a.A2TestCase)',
+            'a2c':'test_method_common (tests_a.A2TestCase)',
+            'b'  :'test_method_b (tests_b.BTestCase)',
+            'bc' :'test_method_common (tests_b.BTestCase)',
+            'cc' :'test_method_common (tests_c.CTestCase)',
         }
 
-    def _get_expected(self, names):
-        keys = names.split(',')
-        return [self.all_cases[key] for key in keys]
+        cls.bad_cases = {
+            'dc':'test_method_common (tests_d.DTestCase)',
+            'f' :'test_method_f (unittest.loader._FailedTest)',
+        }
 
-    def _get_suite_groupings(self):
-        suite = discover_tests(self.start_dir, labels=['=ATest'], 
-            pattern=self.pattern)
-        group = TestSuite(suite)
-        suite = discover_tests(self.start_dir, labels=['=BTest'], 
-            pattern=self.pattern)
-        group.addTests(suite)
-
-        suite = discover_tests(self.start_dir, labels=['=CTest'], 
-            pattern=self.pattern)
-        return TestSuite([suite, group])
-
-    def assert_test_strings(self, expected, tests):
-        expected_names = self._get_expected(expected)
+    def assert_test_strings(self, case, keys, tests):
+        values = [case[key] for key in keys]
         names = [str(test) for test in tests]
-        self.assertEqual(set(expected_names), set(names))
+        self.assertEqual(set(values), set(names))
 
     def test_list_tests(self):
-        class ModuleImportFailure(TestSuite):
-            pass
-
-        # get out test suite and add in our mock of python's failure module to
-        # make sure list_tests skips it
-        suite = self._get_suite_groupings()
-        suite.addTest(ModuleImportFailure())
-
+        suite = discover_tests(self.good_dir)
         tests = list(list_tests(suite))
-        self.assert_test_strings('aa,ac,bb,bc,cc', tests)
+        self.assert_test_strings(self.good_cases, self.good_cases.keys(), tests)
 
-    def _check_discover(self, labels, expected):
-        suite = discover_tests(self.start_dir, labels=labels, 
-            pattern=self.pattern)
+    def _check_shortcuts(self, expected, labels):
+        suite = discover_tests(self.good_dir, labels=labels)
         tests = list_tests(suite)
-        self.assert_test_strings(expected, tests)
+        self.assert_test_strings(self.good_cases, expected, tests)
 
-    def test_discover_and_shortcuts(self):
+    def test_shortcuts(self):
         # -- find all
-        self._check_discover([], 'ac,aa,bc,bb,cc')
+        self._check_shortcuts(['a1', 'a1c', 'a2', 'a2c', 'b', 'bc', 'cc'], [])
 
         # -- test shortcuts
-        labels = ['=common']
-        self._check_discover(labels, 'ac,bc,cc')
+        labels = ['=common', ]
+        self._check_shortcuts(['a1c', 'a2c', 'bc', 'cc'], labels)
 
-        labels = ['=_a', '=_b']
-        self._check_discover(labels, 'aa,bb')
+        labels = ['=method_a', '=method_b']
+        self._check_shortcuts(['a1', 'a2', 'b',], labels)
 
-        labels = ['=ATest']
-        self._check_discover(labels, 'aa,ac')
+        labels = ['=A1Test']
+        self._check_shortcuts(['a1', 'a1c', ], labels)
 
         # -- test full labels
         labels = [
-            'fake_testcases.ATestCase.test_a',
-            'fake_testcases.BTestCase.test_b',
+            'tests_a.A1TestCase.test_method_a1',
+            'tests_b.BTestCase.test_method_b',
         ]
-        self._check_discover(labels, 'aa,bb')
+        self._check_shortcuts(['a1', 'b', ], labels)
 
         # -- test mix
-        labels = ['=ATestCase', 'fake_testcases.BTestCase.test_b', ]
-        self._check_discover(labels, 'aa,ac,bb')
+        labels = ['=A1TestCase', 'tests_b.BTestCase.test_method_b', ]
+        self._check_shortcuts(['a1','a1c', 'b', ], labels)
 
-    def test_misc(self):
-        # misc stuff to hit our 100% coverage 
-        suite = discover_tests(self.start_dir, pattern=self.pattern)
-        for t in list_tests(suite):
-            t.run()
+    def test_discover_pattern(self):
+        # check the use of a non-default file name containing test cases
+        suite = discover_tests(self.good_dir, [], 'others.py')
+        tests = list(list_tests(suite))
+        self.assertEqual(1, len(tests))
+        self.assertEqual('test_method_common (others.OtherTestCase)', 
+            str(tests[0]))
 
     def test_replace_dir(self):
         # create a temp directory and put something in it which is to be

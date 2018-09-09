@@ -1,5 +1,5 @@
 # waelstow.py
-__version__ = '0.10.1'
+__version__ = '0.10.2'
 
 import contextlib, os, shutil, sys, tempfile, json
 from unittest import TestCase, TestSuite, TestLoader
@@ -21,10 +21,7 @@ def list_tests(suites):
         Iterable of :class:`TestCase` objects contained within the suites
     """
     for test in suites:
-        if test.__class__.__name__ == 'ModuleImportFailure':
-            # ignore the import fail module
-            pass
-        elif isinstance(test, TestCase):
+        if isinstance(test, TestCase):
             yield test
         else:
             for t in list_tests(test):
@@ -33,31 +30,31 @@ def list_tests(suites):
 
 def find_shortcut_tests(suites, shortcut_labels):
     """Takes a suite of tests and returns a list of tests that conform to the
-    passed in list of short-cut labels.  A short-cut label begins with an "="
-    and is then checked against the full test case and method name, if the
-    shortcut string is in the full test name then the test is returned.
+    passed in list of short-cut labels.  A short-cut label begins with a "="
+    and indicates a partial string contained in either the name of the test or
+    the test class.
 
     Example:
 
     .. code-block::python
 
-    >>> list_tests(suite)
-    [
-        test_foo (wrench.test.SomeTest),
-        test_foo (wrench.test.AnotherTest),
-        test_bar (wrench.test.AnotherTest),
-        test_bar (wrench.test.DifferentTest),
-    ]
-    >>> find_shorcut_tests(suite, ['=foo'])
-    [
-        test_foo (wrench.test.SomeTest),
-        test_foo (wrench.test.AnotherTest),
-    ]
-    >>> find_shorcut_tests(suite, ['=Another'])
-    [
-        test_foo (wrench.test.AnotherTest),
-        test_bar (wrench.test.AnotherTest),
-    ]
+        >>> list_tests(suite)
+        [
+            test_foo (wrench.test.SomeTest),
+            test_foo (wrench.test.AnotherTest),
+            test_bar (wrench.test.AnotherTest),
+            test_bar (wrench.test.DifferentTest),
+        ]
+        >>> find_shorcut_tests(suite, ['=foo'])
+        [
+            test_foo (wrench.test.SomeTest),
+            test_foo (wrench.test.AnotherTest),
+        ]
+        >>> find_shorcut_tests(suite, ['=Another'])
+        [
+            test_foo (wrench.test.AnotherTest),
+            test_bar (wrench.test.AnotherTest),
+        ]
 
     :param suites:
         A single or iterable of :class:`TestSuite` objects to create the test
