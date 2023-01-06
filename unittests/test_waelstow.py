@@ -15,13 +15,13 @@ class WaelstowTest(TestCase):
         cls.good_dir = os.path.abspath(os.path.join(cls.extras, 'good_tests'))
 
         cls.good_cases = {
-            'a1' :'test_method_a1 (tests_a.A1TestCase)',
-            'a1c':'test_method_common (tests_a.A1TestCase)',
-            'a2' :'test_method_a2 (tests_a.A2TestCase)',
-            'a2c':'test_method_common (tests_a.A2TestCase)',
-            'b'  :'test_method_b (tests_b.BTestCase)',
-            'bc' :'test_method_common (tests_b.BTestCase)',
-            'cc' :'test_method_common (tests_c.CTestCase)',
+            'a1' :'tests_a.A1TestCase.test_method_a1',
+            'a1c':'tests_a.A1TestCase.test_method_common',
+            'a2' :'tests_a.A2TestCase.test_method_a2',
+            'a2c':'tests_a.A2TestCase.test_method_common',
+            'b'  :'tests_b.BTestCase.test_method_b',
+            'bc' :'tests_b.BTestCase.test_method_common',
+            'cc' :'tests_c.CTestCase.test_method_common',
         }
 
     # -----------------------------------------------------------
@@ -29,7 +29,7 @@ class WaelstowTest(TestCase):
 
     def assert_test_strings(self, case, keys, tests):
         values = [case[key] for key in keys]
-        names = [str(test) for test in tests]
+        names = [test.id() for test in tests]
         self.assertEqual(set(values), set(names))
 
     def test_list_tests(self):
@@ -72,8 +72,8 @@ class WaelstowTest(TestCase):
         suite = discover_tests(self.good_dir, [], 'others.py')
         tests = list(list_tests(suite))
         self.assertEqual(1, len(tests))
-        self.assertEqual('test_method_common (others.OtherTestCase)', 
-            str(tests[0]))
+        self.assertEqual('others.OtherTestCase.test_method_common', 
+            tests[0].id())
 
     def test_bad_file(self):
         # check that discovered tests that don't compile are found properly
@@ -81,14 +81,14 @@ class WaelstowTest(TestCase):
         bad_dir = os.path.abspath(os.path.join(self.extras, 'bad_tests'))
         suite = discover_tests(bad_dir, [])
 
-        expected = ['test_method_common (tests_d.DTestCase)',]
-        if sys.version[0] == '3':
-            expected.append('tests_f (unittest.loader._FailedTest)')
-        else: # pragma: no cover
-            expected.append('tests_f (unittest.loader.ModuleImportFailure)')
+        expected = [
+            'tests_d.DTestCase.test_method_common',
+            'unittest.loader._FailedTest.tests_f',
+        ]
 
         expected = set(expected)
-        tests = set([str(test) for test in list_tests(suite)])
+
+        tests = set([test.id() for test in list_tests(suite)])
         self.assertEqual(expected, tests)
 
     # -----------------------------------------------------------

@@ -43,9 +43,6 @@ SETUP_ARGS = dict(
     keywords='test,testing,unit test,unittest,test runner',
     test_suite='load_tests.get_suite',
     py_modules = ['waelstow',],
-    install_requires = [
-        'six>=1.11',
-    ],
     not_an_argument=True,
 )
 

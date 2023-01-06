@@ -1,10 +1,9 @@
 # waelstow.py
-__version__ = '0.10.2'
+__version__ = '0.11.0'
 
 import contextlib, os, shutil, sys, tempfile, json
+from io import StringIO
 from unittest import TestCase, TestSuite, TestLoader
-
-from six import StringIO
 
 # =============================================================================
 # Test Suite Discovery & Management
