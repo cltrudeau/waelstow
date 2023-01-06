@@ -2,7 +2,7 @@ import os, shutil, tempfile, sys
 from unittest import TestCase
 
 from waelstow import (list_tests, discover_tests, capture_stdout, 
-    capture_stderr, replaced_directory, pprint)
+    capture_stderr, replaced_directory, pprint, noted_raise)
 
 # =============================================================================
 
@@ -169,3 +169,20 @@ class WaelstowTest(TestCase):
             pprint(d)
 
         self.assertEqual(expected, output.getvalue())
+
+    def test_noted_raise(self):
+        # Test exiting context manager without an exception
+        with noted_raise("Message"):
+            self.assertTrue(True)
+
+        with self.assertRaises(Exception) as ex:
+            value = 1
+            with noted_raise("Value={value}"):
+                value += 21
+                raise ValueError("A Value Error")
+
+        ex = ex.exception
+        if hasattr(ex, "add_note"):
+            self.assertEqual(ex.__notes__, [" Value=22"])
+        else:
+            self.assertEqual(str(ex), "A Value Error Value=22")

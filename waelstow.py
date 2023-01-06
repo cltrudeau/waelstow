@@ -216,6 +216,59 @@ def capture_stderr():
         sys.stderr = stderr
 
 
+class noted_raise:
+    """This ``Context Manager`` is used to annotate an exception raised within
+    its block. Sometimes when testing you might have a loop with variables, if
+    an assert fails in the loop you'd like to see more of the context. This
+    context manager allows you to define a message format based on local
+    variables and if there is an exception it will add info the exception's
+    message.
+
+    If you're using a version of Python that supports ``Exception.add_note()``
+    (Python >=3.11), your formatted message is added as a note. If you are
+    not, it assumes the first argument to the ``Exception`` is the message and
+    appends text to it.
+
+    :param message: The message string to append in the case of an exception.
+        This string is passed to ``str.format()`` using local variables as the
+        context. Anything local variable you have defined will be available as
+        a named value in the message string.
+
+    .. code-block:: python
+
+        with noted_raise("Counter:{counter}"):
+            for counter in range(1, 10):
+                self.assertTrue(counter < 5)
+
+    The above example will result in ``AssertionEror`` with either a note that
+    containing " Counter:5", or the exceptions message string having the same
+    appended to the end.
+    """
+    def __init__(self, message):
+        self.message = message
+
+    def __enter__(self):
+        pass
+
+    def __exit__(self, exc_type, exc_value, exc_tb):
+        if exc_type is None:
+            # No exception, do nothing
+            return
+
+        # Exited context manager with exception, use the locals from the stack
+        # frame as context for the message
+        text = " " + self.message.format(**exc_tb.tb_frame.f_locals)
+
+        if hasattr(exc_value, "add_note"):
+            # Version of Python being run has the Exception.add_note feature,
+            # used it to add the info
+            exc_value.add_note(text)
+        else:
+            # For Python's without Exception.add_note(), need to modify the
+            # exceptions message, assume that's the first arg (which it
+            # usually is)
+            exc_value.args = (exc_value.args[0] + text, ) + exc_value.args[1:]
+
 # =============================================================================
 # Misc
 # =============================================================================

@@ -4,7 +4,7 @@ Waelstow
     
     1) literal: "death field" or "slaugher field"; 
     2) Anglo Saxon term for battlefields
-    3) A collection of python testing utilties
+    3) A collection of Python testing utilties
 
 Installation
 ============
@@ -16,7 +16,7 @@ Installation
 Supports
 ========
 
-Python wrench has been tested with Python 2.7, 3.5, and 3.6
+Tested with Python 3.7 - Python 3.11
 
 Docs & Source
 =============
