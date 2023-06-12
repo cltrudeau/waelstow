@@ -1,7 +1,7 @@
 import os, shutil, tempfile, sys
 from unittest import TestCase
 
-from waelstow import (list_tests, discover_tests, capture_stdout, 
+from waelstow import (list_tests, discover_tests, capture_stdout,
     capture_stderr, replaced_directory, pprint, noted_raise)
 
 # =============================================================================
@@ -9,7 +9,7 @@ from waelstow import (list_tests, discover_tests, capture_stdout,
 class WaelstowTest(TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.extras = os.path.join(os.path.dirname(os.path.dirname(__file__)), 
+        cls.extras = os.path.join(os.path.dirname(os.path.dirname(__file__)),
             'extras')
 
         cls.good_dir = os.path.abspath(os.path.join(cls.extras, 'good_tests'))
@@ -72,7 +72,7 @@ class WaelstowTest(TestCase):
         suite = discover_tests(self.good_dir, [], 'others.py')
         tests = list(list_tests(suite))
         self.assertEqual(1, len(tests))
-        self.assertEqual('others.OtherTestCase.test_method_common', 
+        self.assertEqual('others.OtherTestCase.test_method_common',
             tests[0].id())
 
     def test_bad_file(self):
@@ -87,6 +87,16 @@ class WaelstowTest(TestCase):
         ]
 
         expected = set(expected)
+
+        tests = set([test.id() for test in list_tests(suite)])
+        self.assertEqual(expected, tests)
+
+        # Do it again with the shortcut finder, failed test should still be
+        # found so it throws an exception when run
+        suite = discover_tests(bad_dir, ["=foo"])
+        expected = set([
+            'unittest.loader._FailedTest.tests_f',
+        ])
 
         tests = set([test.id() for test in list_tests(suite)])
         self.assertEqual(expected, tests)

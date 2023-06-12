@@ -1,9 +1,10 @@
 # waelstow.py
-__version__ = '0.11.0'
+__version__ = '0.11.1'
 
 import contextlib, os, shutil, sys, tempfile, json
 from io import StringIO
 from unittest import TestCase, TestSuite, TestLoader
+from unittest.loader import _FailedTest
 
 # =============================================================================
 # Test Suite Discovery & Management
@@ -61,13 +62,19 @@ def find_shortcut_tests(suites, shortcut_labels):
     :param shortcut_labels:
         A list of short-cut labels to use to cull the list
     :returns:
-        A list of :class:`TestCase` objects 
+        A list of :class:`TestCase` objects
     """
     # strip the '=' from the front of each label
     labels = [label[1:] for label in shortcut_labels]
 
     results = []
     for test in list_tests(suites):
+        if isinstance(test, _FailedTest):
+            # If a test fails to load there is something wrong with the code
+            # it imports, put it in the suite so the runner shows the
+            # appropriate exception even if it doesn't match the label
+            results.append(test)
+
         name = '%s.%s.%s' % (test.__module__, test.__class__.__name__,
             test._testMethodName)
         for label in labels:

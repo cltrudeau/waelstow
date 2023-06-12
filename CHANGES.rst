@@ -1,3 +1,11 @@
+0.11.1
+======
+
+* Changed the test discovery with shortcut labels to return tests that don't
+  load properly so that their information gets printed rather than the test
+  not being found
+
+
 0.11.0
 ======
 
