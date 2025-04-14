@@ -14,13 +14,17 @@
 # serve to show the default.
 
 import sys
-import os
-import shlex
+from pathlib import Path
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-sys.path.insert(0, os.path.abspath('..'))
+
+SRC_DIR = Path(__file__).parent.parent / 'src'
+SRC_DIR = SRC_DIR.resolve()
+sys.path.insert(0, str(SRC_DIR))
+
+import waelstow
 
 # -- General configuration ------------------------------------------------
 
@@ -59,10 +63,7 @@ author = 'Christopher Trudeau'
 # built documents.
 #
 # The short X.Y version.
-import imp
-mod = imp.load_source('walestow', '../waelstow.py')
-
-version = mod.__version__
+version = waelstow.__version__
 
 #version = mod.VERSION
 #version = mod.SETUP_ARGS['version']
@@ -74,7 +75,7 @@ release = version
 #
 # This is also used if you do content translation via gettext catalogs.
 # Usually you set "language" from the command line for these cases.
-language = None
+language = 'en'
 
 # There are two options for replacing |today|: either, you set today to some
 # non-false value, then it is used:
