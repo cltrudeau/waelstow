@@ -50,7 +50,7 @@ class WaelstowTest(TestCase):
         labels = ['=common', ]
         self._check_shortcuts(['a1c', 'a2c', 'bc', 'cc'], labels)
 
-        labels = ['=method_a', '=method_b']
+        labels = ['=method_a', ':method_b']
         self._check_shortcuts(['a1', 'a2', 'b',], labels)
 
         labels = ['=A1Test']

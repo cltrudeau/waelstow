@@ -2,4 +2,4 @@
 
 echo "============================================================"
 echo "== pyflakes =="
-pyflakes waelstow.py unittests
+pyflakes src/waelstow.py tests

@@ -1,5 +1,5 @@
 # waelstow.py
-__version__ = '0.11.1'
+__version__ = '0.12.0'
 
 import contextlib, os, shutil, sys, tempfile, json
 from io import StringIO
@@ -31,8 +31,8 @@ def list_tests(suites):
 def find_shortcut_tests(suites, shortcut_labels):
     """Takes a suite of tests and returns a list of tests that conform to the
     passed in list of short-cut labels.  A short-cut label begins with a "="
-    and indicates a partial string contained in either the name of the test or
-    the test class.
+    or an ":" and indicates a partial string contained in either the name of
+    the test or the test class.
 
     Example:
 
@@ -50,7 +50,7 @@ def find_shortcut_tests(suites, shortcut_labels):
             test_foo (wrench.test.SomeTest),
             test_foo (wrench.test.AnotherTest),
         ]
-        >>> find_shorcut_tests(suite, ['=Another'])
+        >>> find_shorcut_tests(suite, [':Another'])
         [
             test_foo (wrench.test.AnotherTest),
             test_bar (wrench.test.AnotherTest),
@@ -64,7 +64,7 @@ def find_shortcut_tests(suites, shortcut_labels):
     :returns:
         A list of :class:`TestCase` objects
     """
-    # strip the '=' from the front of each label
+    # strip a leading '=' (or any character) from the front of each label
     labels = [label[1:] for label in shortcut_labels]
 
     results = []
@@ -98,7 +98,7 @@ def discover_tests(start_dir, labels=[], pattern='test*.py'):
     shortcut_labels = []
     full_labels = []
     for label in labels:
-        if label.startswith('='):
+        if label.startswith('=') or label.startswith(":"):
             shortcut_labels.append(label)
         else:
             full_labels.append(label)
@@ -282,7 +282,7 @@ class noted_raise:
 
 def pprint(data):
     """Alternative to `pprint.PrettyPrinter()` that uses `json.dumps()` for
-    sorting and displaying data.  
+    sorting and displaying data.
 
     :param data: item to print to STDOUT.  The item must be json serializable!
     """

@@ -1,3 +1,13 @@
+0.12.0
+======
+
+* 2025/04/14
+* Added ":" as optional test shortcut label indicator since zsh uses "=" to
+  mean something and I was tired of having to quote it
+* Moved to using pyproject.toml
+* Moved to using nox
+* Changed support range to Python 3.9 - 3.13
+
 0.11.1
 ======
 
