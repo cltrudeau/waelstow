@@ -1,3 +1,9 @@
+0.12.1
+======
+
+* 2025/12/05
+* Added test for Python 3.14, removed test for Python 3.9
+
 0.12.0
 ======
 

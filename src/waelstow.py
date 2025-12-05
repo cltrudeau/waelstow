@@ -1,5 +1,5 @@
 # waelstow.py
-__version__ = '0.12.0'
+__version__ = '0.12.1'
 
 import contextlib, os, shutil, sys, tempfile, json
 from io import StringIO
