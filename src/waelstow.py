@@ -271,9 +271,9 @@ class noted_raise:
             # used it to add the info
             exc_value.add_note(text)
         else:
-            # For Python's without Exception.add_note(), need to modify the
-            # exceptions message, assume that's the first arg (which it
-            # usually is)
+            # For Python's without Exception.add_note(), (3.10 and below) need
+            # to modify the exceptions message, assume that's the first arg
+            # (which it usually is)
             exc_value.args = (exc_value.args[0] + text, ) + exc_value.args[1:]
 
 # =============================================================================

@@ -4,7 +4,7 @@ Waelstow
 
     1) literal: "death field" or "slaugher field";
     2) Anglo Saxon term for battlefields
-    3) A collection of Python testing utilties
+    3) A collection of Python testing utilities
 
 Installation
 ============
@@ -16,7 +16,7 @@ Installation
 Supports
 ========
 
-Tested with Python 3.9 - Python 3.13
+Tested with Python 3.10 - Python 3.14
 
 Docs & Source
 =============
