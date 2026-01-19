@@ -94,6 +94,25 @@ def discover_tests(start_dir, labels=[], pattern='test*.py'):
         Optional list of labels to filter the tests by
     :returns:
         :class:`TestSuite` with tests
+
+    Example script to use instead of ``python -m unitest``:
+
+    .. code-block:: python
+
+        #!/usr/bin/env python
+        import unittest, sys
+        from waelstow import discover_tests
+
+        sys.path.append('./src')
+
+        def get_suite(labels=[]):
+            return discover_tests('tests', labels)
+
+
+        if __name__ == '__main__':
+            suite = get_suite(sys.argv[1:])
+            unittest.TextTestRunner(verbosity=1).run(suite)
+
     """
     shortcut_labels = []
     full_labels = []
@@ -127,7 +146,7 @@ def discover_tests(start_dir, labels=[], pattern='test*.py'):
 
 @contextlib.contextmanager
 def replaced_directory(dirname):
-    """This ``Context Manager`` is used to move the contents of a directory
+    """This context manager is used to move the contents of a directory
     elsewhere temporarily and put them back upon exit.  This allows testing
     code to use the same file directories as normal code without fear of
     damage.
@@ -179,8 +198,8 @@ def replaced_directory(dirname):
 
 @contextlib.contextmanager
 def capture_stdout():
-    """This ``Context Manager`` redirects STDOUT to a ``StringIO`` objects
-    which is returned from the ``Context``.  On exit STDOUT is restored.
+    """This context manager redirects STDOUT to a ``StringIO`` objects
+    which is returned from the context.  On exit STDOUT is restored.
 
     Example:
 
@@ -202,8 +221,8 @@ def capture_stdout():
 
 @contextlib.contextmanager
 def capture_stderr():
-    """This ``Context Manager`` redirects STDERR to a ``StringIO`` objects
-    which is returned from the ``Context``.  On exit STDERR is restored.
+    """This context manager redirects STDERR to a ``StringIO`` objects
+    which is returned from the context.  On exit STDERR is restored.
 
     Example:
 
@@ -224,7 +243,7 @@ def capture_stderr():
 
 
 class noted_raise:
-    """This ``Context Manager`` is used to annotate an exception raised within
+    """This context manager is used to annotate an exception raised within
     its block. Sometimes when testing you might have a loop with variables, if
     an assert fails in the loop you'd like to see more of the context. This
     context manager allows you to define a message format based on local
